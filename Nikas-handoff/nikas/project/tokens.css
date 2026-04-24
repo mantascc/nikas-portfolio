@@ -1,0 +1,142 @@
+/* =========================================================================
+   Clear Channel — Light mode, editorial
+   Adapted from the dark design system. Warm off-white canvas, not pure white.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Canvas */
+  --bg-0: #f5f2ec;    /* warm off-white page canvas — mirrors #0a0a0a's warmth */
+  --bg-1: #ffffff;    /* card / elevated surface */
+  --bg-2: #efece5;    /* inset, code blocks */
+  --bg-3: #e8e4db;    /* table header, emphasized inset */
+
+  /* Hairlines */
+  --line-1: #d8d4c9;   /* default 1px hairline */
+  --line-2: #c2bdad;   /* hover */
+  --line-3: #a8a392;   /* focused / pressed */
+
+  /* Ink */
+  --fg-5: #b6b0a0;   /* em-dash marker, tertiary ink */
+  --fg-4: #8a8473;   /* link default, micro labels */
+  --fg-3: #6a6454;   /* body secondary */
+  --fg-2: #403c32;   /* emphasized body */
+  --fg-1: #231f18;   /* primary headlines */
+  --fg-0: #0e0c08;   /* pure primary ink */
+
+  /* Semantic — slightly desaturated for light canvas */
+  --sem-success: #3a7f2f;
+  --sem-error:   #b8362b;
+  --sem-warn:    #8a6a14;
+  --sem-info:    #2a5fb8;
+  --sem-special: #6e4fb5;
+  --sem-meta:    #1e7a83;
+
+  /* Accent — ube purple. Used once per page, sparingly. */
+  /* (var names kept as --acc-amber* so downstream refs don't need rewiring) */
+  --acc-amber: #7b5ea8;
+  --acc-amber-soft: #e0d5ef;
+
+  /* Type */
+  --font-mono: 'JetBrains Mono','SF Mono','Monaco','Cascadia Code',ui-monospace,monospace;
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+
+  /* Scale */
+  --fz-display: 88px;
+  --fz-hero:    64px;
+  --fz-h1:      32px;
+  --fz-h2:      20px;
+  --fz-h3:      16px;
+  --fz-body:    14px;
+  --fz-micro:   12px;
+  --fz-mini:    11px;
+  --fz-tiny:    10px;
+
+  /* Spacing */
+  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
+  --s5: 24px; --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px;
+}
+
+/* =========================================================================
+   .cc — apply to root of any Clear-Channel-light surface
+   ========================================================================= */
+
+.cc, .cc * { box-sizing: border-box; }
+
+.cc {
+  background: var(--bg-0);
+  color: var(--fg-2);
+  font-family: var(--font-mono);
+  font-size: var(--fz-body);
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.cc ::selection { background: var(--fg-1); color: var(--bg-0); }
+
+/* Serif display */
+.cc .display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  color: var(--fg-0);
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+}
+
+/* Micro label — uppercase tracking, aviation manifest feel */
+.cc .label {
+  font-family: var(--font-mono);
+  font-size: var(--fz-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-4);
+}
+
+.cc .label-k {  /* emphasized label — ink, not muted */
+  font-family: var(--font-mono);
+  font-size: var(--fz-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-1);
+  font-weight: 500;
+}
+
+/* Links */
+.cc a {
+  color: var(--fg-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-2);
+  transition: border-color 0.2s, color 0.2s;
+}
+.cc a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
+
+/* Em-dash list */
+.cc .dash-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--s4) 0;
+}
+.cc .dash-list li {
+  color: var(--fg-3);
+  margin: var(--s2) 0;
+  padding-left: var(--s4);
+  position: relative;
+  font-size: var(--fz-body);
+}
+.cc .dash-list li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--fg-5);
+}
+
+.cc hr { border: 0; border-top: 1px solid var(--line-1); margin: var(--s6) 0; }
+
+/* Scrollbars */
+.cc ::-webkit-scrollbar { width: 8px; height: 8px; }
+.cc ::-webkit-scrollbar-track { background: var(--bg-0); }
+.cc ::-webkit-scrollbar-thumb { background: var(--line-1); }
+.cc ::-webkit-scrollbar-thumb:hover { background: var(--line-2); }

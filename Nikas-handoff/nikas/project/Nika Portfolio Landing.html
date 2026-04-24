@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nika Larsen — Portfolio · three options</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #e8e6df; font-family: 'JetBrains Mono', monospace; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="design-canvas.jsx"></script>
+  <script type="text/babel" src="Option1_Logbook.jsx"></script>
+  <script type="text/babel" src="Option2_FlightDeck.jsx"></script>
+  <script type="text/babel" src="Option3_Sectional.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="env,react">
+    function App() {
+      return (
+        <DesignCanvas>
+          <DCSection id="portfolio" title="Nika Larsen — Portfolio Landing" subtitle="Three editorial directions · Clear Channel, light mode · aviation real-time data">
+            <DCArtboard id="opt1" label="A · Logbook — editorial column, most restrained" width={880} height={2100} data-screen-label="Opt A · Logbook">
+              <Option1Logbook />
+            </DCArtboard>
+            <DCArtboard id="opt2" label="B · Flight Deck — split editorial + live dispatcher panel" width={1360} height={2100} data-screen-label="Opt B · Flight Deck">
+              <Option2FlightDeck />
+            </DCArtboard>
+            <DCArtboard id="opt3" label="C · Sectional — chart-inspired waypoint plot (widest)" width={1360} height={2400} data-screen-label="Opt C · Sectional">
+              <Option3Sectional />
+            </DCArtboard>
+          </DCSection>
+        </DesignCanvas>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
