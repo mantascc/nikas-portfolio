@@ -383,7 +383,7 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
       <div class="times"><b>VNO</b> → <b>GRQ</b> → <b>BCN</b> &nbsp;·&nbsp; 2,820 km</div>
     </div>
 
-    <svg id="pathViz" viewBox="0 0 640 180" preserveAspectRatio="none" aria-hidden="true">
+    <svg id="pathViz" viewBox="0 0 640 180" aria-hidden="true">
       <!-- dashed full path -->
       <path id="pathFull" d="" fill="none" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="3 5"/>
       <!-- traced (accent) path -->
@@ -580,33 +580,51 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
    ───────────────────────────────────────────────────────────── */
 (function() {
   const SVGNS   = 'http://www.w3.org/2000/svg';
+  const svg     = document.getElementById('pathViz');
   const fullEl  = document.getElementById('pathFull');
   const traceEl = document.getElementById('pathTraced');
   const cities  = document.getElementById('cities');
   const plane   = document.getElementById('plane');
 
-  // Relative positions on the 640×180 canvas. Geographic-ish:
-  // VNO (25.3°E, 54.7°N) north-east; GRQ (6.6°E, 53.1°N) upper-middle
-  // left; BCN (2.2°E, 41.4°N) south-west.
-  const P = {
-    VNO: { x: 560, y: 52,  code: 'VNO' },
-    GRQ: { x: 195, y: 62,  code: 'GRQ' },
-    BCN: { x: 90,  y: 148, code: 'BCN' },
+  // Two layouts: `wide` keeps the original geographic-ish reading
+  // (VNO north-east, GRQ middle, BCN south-west). `tall` swaps to a
+  // vertical S-curve below 560px so labels and markers don't collapse
+  // when the SVG is squeezed onto a phone.
+  const LAYOUTS = {
+    wide: {
+      viewBox: '0 0 640 180',
+      P: {
+        VNO: { x: 560, y: 52  },
+        GRQ: { x: 195, y: 62  },
+        BCN: { x: 90,  y: 148 },
+      },
+      C1: { x: 370, y: 18  },
+      C2: { x: 195, y: 105 },
+      labels: [
+        { code: 'VNO', lx: -8, ly: -12, anchor: 'end'    },
+        { code: 'GRQ', lx: 0,  ly: -14, anchor: 'middle' },
+        { code: 'BCN', lx: 11, ly: 4,   anchor: 'start'  },
+      ],
+      ringR: 8, dotR: 3, fontSize: 9.5, planeScale: 1,
+    },
+    tall: {
+      viewBox: '0 0 320 360',
+      P: {
+        VNO: { x: 240, y: 50  },
+        GRQ: { x: 80,  y: 180 },
+        BCN: { x: 220, y: 310 },
+      },
+      C1: { x: 290, y: 110 },
+      C2: { x: 30,  y: 250 },
+      labels: [
+        { code: 'VNO', lx: 0,  ly: 28,  anchor: 'middle' },
+        { code: 'GRQ', lx: 18, ly: 4,   anchor: 'start'  },
+        { code: 'BCN', lx: 0,  ly: -18, anchor: 'middle' },
+      ],
+      ringR: 11, dotR: 4, fontSize: 13, planeScale: 1.5,
+    },
   };
 
-  // Control points — each arc bows gently (north on leg 1,
-  // slightly east on leg 2) for a natural great-circle look.
-  const C1 = { x: 370, y: 18  };
-  const C2 = { x: 195, y: 105 };
-
-  // Full dashed path: two Q segments joined.
-  fullEl.setAttribute('d',
-    `M ${P.VNO.x} ${P.VNO.y} ` +
-    `Q ${C1.x} ${C1.y} ${P.GRQ.x} ${P.GRQ.y} ` +
-    `Q ${C2.x} ${C2.y} ${P.BCN.x} ${P.BCN.y}`
-  );
-
-  // Sample both legs so we can animate along them and compute tangent.
   function sample(A, C, B, n) {
     const out = [];
     for (let i = 0; i <= n; i++) {
@@ -618,46 +636,64 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
     }
     return out;
   }
-  const N = 120;
-  const leg1 = sample(P.VNO, C1, P.GRQ, N);
-  const leg2 = sample(P.GRQ, C2, P.BCN, N);
-  const samples = leg1.concat(leg2.slice(1)); // drop duplicate GRQ
-  const I_GRQ = N;
-  const I_BCN = samples.length - 1;
 
-  // City markers + 3-letter codes, anchored so labels don't collide.
-  const CITIES = [
-    { p: P.VNO, lx: -8, ly: -12, anchor: 'end'    },
-    { p: P.GRQ, lx: 0,  ly: -14, anchor: 'middle' },
-    { p: P.BCN, lx: 11, ly: 4,   anchor: 'start'  },
-  ];
-  CITIES.forEach(({ p, lx, ly, anchor }) => {
-    const ring = document.createElementNS(SVGNS, 'circle');
-    ring.setAttribute('cx', p.x); ring.setAttribute('cy', p.y);
-    ring.setAttribute('r', 8);
-    ring.setAttribute('fill', 'var(--bg-1)');
-    ring.setAttribute('stroke', 'var(--fg-1)');
-    ring.setAttribute('stroke-width', '1');
-    cities.appendChild(ring);
+  let layout, samples, I_GRQ, I_BCN;
 
-    const dot = document.createElementNS(SVGNS, 'circle');
-    dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y);
-    dot.setAttribute('r', 3);
-    dot.setAttribute('fill', 'var(--fg-1)');
-    cities.appendChild(dot);
+  function build(L) {
+    layout = L;
+    svg.setAttribute('viewBox', L.viewBox);
 
-    const label = document.createElementNS(SVGNS, 'text');
-    label.setAttribute('x', p.x + lx);
-    label.setAttribute('y', p.y + ly);
-    label.setAttribute('text-anchor', anchor);
-    label.setAttribute('font-size', '9.5');
-    label.setAttribute('font-family', 'var(--font-mono)');
-    label.setAttribute('fill', 'var(--fg-0)');
-    label.setAttribute('letter-spacing', '0.12em');
-    label.setAttribute('font-weight', '500');
-    label.textContent = p.code;
-    cities.appendChild(label);
-  });
+    fullEl.setAttribute('d',
+      `M ${L.P.VNO.x} ${L.P.VNO.y} ` +
+      `Q ${L.C1.x} ${L.C1.y} ${L.P.GRQ.x} ${L.P.GRQ.y} ` +
+      `Q ${L.C2.x} ${L.C2.y} ${L.P.BCN.x} ${L.P.BCN.y}`
+    );
+
+    const N = 120;
+    const leg1 = sample(L.P.VNO, L.C1, L.P.GRQ, N);
+    const leg2 = sample(L.P.GRQ, L.C2, L.P.BCN, N);
+    samples = leg1.concat(leg2.slice(1));
+    I_GRQ = N;
+    I_BCN = samples.length - 1;
+
+    while (cities.firstChild) cities.removeChild(cities.firstChild);
+    L.labels.forEach(({ code, lx, ly, anchor }) => {
+      const p = L.P[code];
+      const ring = document.createElementNS(SVGNS, 'circle');
+      ring.setAttribute('cx', p.x); ring.setAttribute('cy', p.y);
+      ring.setAttribute('r', L.ringR);
+      ring.setAttribute('fill', 'var(--bg-1)');
+      ring.setAttribute('stroke', 'var(--fg-1)');
+      ring.setAttribute('stroke-width', '1');
+      cities.appendChild(ring);
+
+      const dot = document.createElementNS(SVGNS, 'circle');
+      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y);
+      dot.setAttribute('r', L.dotR);
+      dot.setAttribute('fill', 'var(--fg-1)');
+      cities.appendChild(dot);
+
+      const label = document.createElementNS(SVGNS, 'text');
+      label.setAttribute('x', p.x + lx);
+      label.setAttribute('y', p.y + ly);
+      label.setAttribute('text-anchor', anchor);
+      label.setAttribute('font-size', L.fontSize);
+      label.setAttribute('font-family', 'var(--font-mono)');
+      label.setAttribute('fill', 'var(--fg-0)');
+      label.setAttribute('letter-spacing', '0.12em');
+      label.setAttribute('font-weight', '500');
+      label.textContent = code;
+      cities.appendChild(label);
+    });
+  }
+
+  const NARROW = window.matchMedia('(max-width: 560px)');
+  const pick   = () => NARROW.matches ? LAYOUTS.tall : LAYOUTS.wide;
+  build(pick());
+  // matchMedia.addEventListener is supported in all modern browsers;
+  // older Safari needs addListener as a fallback.
+  if (NARROW.addEventListener) NARROW.addEventListener('change', () => build(pick()));
+  else NARROW.addListener(() => build(pick()));
 
   // Animation phases (ms). Total ≈ 18s.
   const L1 = 6500;   // leg 1 trace
@@ -687,16 +723,15 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
 
     idx = Math.max(1, Math.min(I_BCN, idx));
 
-    // Traced path
     let d = `M ${samples[0].x} ${samples[0].y}`;
     for (let i = 1; i <= idx; i++) d += ` L ${samples[i].x} ${samples[i].y}`;
     traceEl.setAttribute('d', d);
 
-    // Plane position + rotation along tangent
     const p0 = samples[Math.max(0, idx - 1)];
     const p1 = samples[idx];
     const angle = Math.atan2(p1.y - p0.y, p1.x - p0.x) * 180 / Math.PI + 90;
-    plane.setAttribute('transform', `translate(${p1.x} ${p1.y}) rotate(${angle})`);
+    plane.setAttribute('transform',
+      `translate(${p1.x} ${p1.y}) rotate(${angle}) scale(${layout.planeScale})`);
     plane.setAttribute('opacity', paused ? '0.35' : '1');
 
     requestAnimationFrame(frame);
