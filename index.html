@@ -213,7 +213,7 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
 
 .case-head {
   display: grid;
-  grid-template-columns: 80px 1fr auto;
+  grid-template-columns: 80px 1fr;
   column-gap: 24px;
   align-items: start;
   margin-bottom: 20px;
@@ -226,21 +226,11 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
   color: var(--fg-4);
   padding-bottom: 8px;
 }
-.case-head .col-label.right { text-align: right; }
 .case-date {
   font-family: var(--font-mono);
   font-size: 13px;
   color: var(--fg-2);
   letter-spacing: 0.02em;
-  padding-top: 6px;
-}
-.case-code {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--fg-1);
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-align: right;
   padding-top: 6px;
 }
 .case-title {
@@ -283,9 +273,8 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
 .case-body dd b { color: var(--fg-1); font-weight: 500; }
 
 @media (max-width: 560px) {
-  .case-head { grid-template-columns: 1fr auto; column-gap: 12px; }
-  .case-head .col-label:nth-child(2) { display: none; }
-  .case-head > div:nth-child(5) { grid-column: 1 / 3; margin-top: 4px; }
+  .case-head { grid-template-columns: 1fr; column-gap: 0; }
+  .case-head .col-label { display: none; }
   .case-body { grid-template-columns: 1fr; row-gap: 4px; }
   .case-body dd { margin-bottom: 10px; }
 }
@@ -412,13 +401,11 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
     <header class="case-head">
       <div class="col-label">Year</div>
       <div class="col-label">Project</div>
-      <div class="col-label right">Index</div>
       <div class="case-date">2023</div>
       <div>
         <h3 class="case-title">My Fleet</h3>
         <div class="case-sub">customer support platform rebuild · SITA</div>
       </div>
-      <div class="case-code">NL—01 · MYFLT</div>
     </header>
     <dl class="case-body">
       <dt>Role</dt>
@@ -452,13 +439,11 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
     <header class="case-head">
       <div class="col-label">Year</div>
       <div class="col-label">Project</div>
-      <div class="col-label right">Index</div>
       <div class="case-date">2024</div>
       <div>
         <h3 class="case-title">Mission Control</h3>
         <div class="case-sub">aviation ms teams plug-in · SITA</div>
       </div>
-      <div class="case-code">NL—02 · MSNCT</div>
     </header>
     <dl class="case-body">
       <dt>Role</dt>
@@ -494,13 +479,11 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
     <header class="case-head">
       <div class="col-label">Year</div>
       <div class="col-label">Project</div>
-      <div class="col-label right">Index</div>
       <div class="case-date">2025</div>
       <div>
         <h3 class="case-title">Opti Flight</h3>
         <div class="case-sub">tactical flight trajectory optimisation · SITA / eWAS+</div>
       </div>
-      <div class="case-code">NL—03 · OPTIF</div>
     </header>
     <dl class="case-body">
       <dt>Role</dt>
