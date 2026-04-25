@@ -363,13 +363,13 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
   <!-- Flight path viz -->
   <h2 class="h2">
     <span>01 &nbsp;·&nbsp; Passage</span>
-    <span class="count">vno → grq → bcn</span>
+    <span class="count">vno → gro → bcn</span>
   </h2>
 
   <div class="viz">
     <div class="viz-strip">
       <div class="flt"><span class="pulse"></span>itinerary · 02 legs</div>
-      <div class="times"><b>VNO</b> → <b>GRQ</b> → <b>BCN</b> &nbsp;·&nbsp; 2,820 km</div>
+      <div class="times"><b>VNO</b> → <b>GRO</b> → <b>BCN</b> &nbsp;·&nbsp; 2,820 km</div>
     </div>
 
     <svg id="pathViz" viewBox="0 0 640 180" aria-hidden="true">
@@ -556,7 +556,7 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
 <script>
 /* ─────────────────────────────────────────────────────────────
    Looping itinerary — pure SVG, non-interactive.
-   Two quadratic-bezier legs (VNO → GRQ → BCN), each with a
+   Two quadratic-bezier legs (VNO → GRO → BCN), each with a
    hold at arrival so the plane can "land" before the next leg.
    After the final leg the traced path clears and the cycle
    restarts. ~18s loop.
@@ -570,7 +570,7 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
   const plane   = document.getElementById('plane');
 
   // Two layouts: `wide` keeps the original geographic-ish reading
-  // (VNO north-east, GRQ middle, BCN south-west). `tall` swaps to a
+  // (VNO north-east, GRO middle, BCN south-west). `tall` swaps to a
   // vertical S-curve below 560px so labels and markers don't collapse
   // when the SVG is squeezed onto a phone.
   const LAYOUTS = {
@@ -578,14 +578,14 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
       viewBox: '0 0 640 180',
       P: {
         VNO: { x: 560, y: 52  },
-        GRQ: { x: 195, y: 62  },
+        GRO: { x: 195, y: 62  },
         BCN: { x: 90,  y: 148 },
       },
       C1: { x: 370, y: 18  },
       C2: { x: 195, y: 105 },
       labels: [
         { code: 'VNO', lx: -8, ly: -12, anchor: 'end'    },
-        { code: 'GRQ', lx: 0,  ly: -14, anchor: 'middle' },
+        { code: 'GRO', lx: 0,  ly: -14, anchor: 'middle' },
         { code: 'BCN', lx: 11, ly: 4,   anchor: 'start'  },
       ],
       ringR: 8, dotR: 3, fontSize: 9.5, planeScale: 1,
@@ -594,14 +594,14 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
       viewBox: '0 0 320 360',
       P: {
         VNO: { x: 240, y: 50  },
-        GRQ: { x: 80,  y: 180 },
+        GRO: { x: 80,  y: 180 },
         BCN: { x: 220, y: 310 },
       },
       C1: { x: 290, y: 110 },
       C2: { x: 30,  y: 250 },
       labels: [
         { code: 'VNO', lx: 0,  ly: 28,  anchor: 'middle' },
-        { code: 'GRQ', lx: 18, ly: 4,   anchor: 'start'  },
+        { code: 'GRO', lx: 18, ly: 4,   anchor: 'start'  },
         { code: 'BCN', lx: 0,  ly: -18, anchor: 'middle' },
       ],
       ringR: 11, dotR: 4, fontSize: 13, planeScale: 1.5,
@@ -620,7 +620,7 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
     return out;
   }
 
-  let layout, samples, I_GRQ, I_BCN;
+  let layout, samples, I_GRO, I_BCN;
 
   function build(L) {
     layout = L;
@@ -628,15 +628,15 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
 
     fullEl.setAttribute('d',
       `M ${L.P.VNO.x} ${L.P.VNO.y} ` +
-      `Q ${L.C1.x} ${L.C1.y} ${L.P.GRQ.x} ${L.P.GRQ.y} ` +
+      `Q ${L.C1.x} ${L.C1.y} ${L.P.GRO.x} ${L.P.GRO.y} ` +
       `Q ${L.C2.x} ${L.C2.y} ${L.P.BCN.x} ${L.P.BCN.y}`
     );
 
     const N = 120;
-    const leg1 = sample(L.P.VNO, L.C1, L.P.GRQ, N);
-    const leg2 = sample(L.P.GRQ, L.C2, L.P.BCN, N);
+    const leg1 = sample(L.P.VNO, L.C1, L.P.GRO, N);
+    const leg2 = sample(L.P.GRO, L.C2, L.P.BCN, N);
     samples = leg1.concat(leg2.slice(1));
-    I_GRQ = N;
+    I_GRO = N;
     I_BCN = samples.length - 1;
 
     while (cities.firstChild) cities.removeChild(cities.firstChild);
@@ -680,7 +680,7 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
 
   // Animation phases (ms). Total ≈ 18s.
   const L1 = 6500;   // leg 1 trace
-  const H1 = 1500;   // pause at GRQ
+  const H1 = 1500;   // pause at GRO
   const L2 = 6500;   // leg 2 trace
   const H2 = 3000;   // pause at BCN before reset
   const TOTAL = L1 + H1 + L2 + H2;
@@ -691,12 +691,12 @@ a:hover { color: var(--fg-0); border-bottom-color: var(--fg-1); }
     let idx, paused = false;
 
     if (el < L1) {
-      idx = Math.floor((el / L1) * I_GRQ);
+      idx = Math.floor((el / L1) * I_GRO);
     } else if (el < L1 + H1) {
-      idx = I_GRQ; paused = true;
+      idx = I_GRO; paused = true;
     } else if (el < L1 + H1 + L2) {
       const p = (el - L1 - H1) / L2;
-      idx = I_GRQ + Math.floor(p * (I_BCN - I_GRQ));
+      idx = I_GRO + Math.floor(p * (I_BCN - I_GRO));
     } else if (el < TOTAL) {
       idx = I_BCN; paused = true;
     } else {
