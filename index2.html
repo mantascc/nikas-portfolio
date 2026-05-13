@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SITA Aviation Systems — UX Portfolio Monograph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f4efe5;
+  --paper-2: #fbf7ef;
+  --ink: #171612;
+  --muted: #686157;
+  --faint: #938b7d;
+  --rule: #cfc7b8;
+  --rule-dark: #8e8577;
+  --green: #355b3d;
+  --ube: #7b5ea8;
+  --shadow: rgba(45, 36, 24, 0.12);
+  --font-mono: "JetBrains Mono", "SF Mono", Monaco, ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.55), transparent 32rem),
+    linear-gradient(90deg, rgba(40,31,18,0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(40,31,18,0.035) 1px, transparent 1px),
+    var(--paper);
+  background-size: auto, 28px 28px, 28px 28px, auto;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.36'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.sheet {
+  width: min(1560px, calc(100vw - 40px));
+  margin: 24px auto 56px;
+}
+
+.masthead {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule-dark);
+  padding: 0 12px 16px;
+  margin-bottom: 26px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.masthead h1 {
+  margin: 0;
+  font-size: clamp(17px, 1.5vw, 24px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+
+.masthead .sub {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.masthead .right {
+  color: var(--ink);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.case-plate {
+  display: grid;
+  grid-template-columns: minmax(230px, 310px) 1fr;
+  gap: 16px;
+  margin: 0 0 18px;
+}
+
+.notes,
+.visual {
+  border: 1px dotted var(--rule);
+  background: rgba(251, 247, 239, 0.52);
+}
+
+.notes {
+  min-height: 100%;
+  padding: 28px 24px 24px;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  gap: 18px;
+}
+
+.plate-title {
+  margin: 0;
+  font-size: clamp(18px, 1.35vw, 23px);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.project {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.project b {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.summary {
+  max-width: 28ch;
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.short-rule {
+  width: 56px;
+  border-top: 2px solid var(--green);
+}
+
+.callouts {
+  display: grid;
+  gap: 22px;
+  align-content: start;
+}
+
+.callout {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 9.5px;
+}
+
+.callout .badge,
+.pin {
+  display: inline-grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border: 1px solid var(--rule-dark);
+  border-radius: 50%;
+  color: var(--ink);
+  background: rgba(244, 239, 229, 0.9);
+  font-size: 9px;
+  line-height: 1;
+}
+
+.plate-id {
+  border-top: 1px solid var(--rule-dark);
+  padding-top: 16px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 10px;
+}
+
+.visual {
+  position: relative;
+  padding: 20px;
+  min-width: 0;
+}
+
+.image-frame {
+  position: relative;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  box-shadow: 0 12px 32px var(--shadow);
+  overflow: hidden;
+}
+
+.image-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(0.78) contrast(0.92) brightness(1.03);
+}
+
+.image-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(244,239,229,0.2), transparent 14%, transparent 86%, rgba(244,239,229,0.16)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+  opacity: 0.44;
+}
+
+.leader {
+  position: absolute;
+  display: grid;
+  grid-template-columns: 20px minmax(44px, 8vw);
+  align-items: center;
+  gap: 0;
+  z-index: 2;
+  color: var(--ink);
+}
+
+.leader::after {
+  content: "";
+  height: 1px;
+  border-top: 1px solid var(--rule-dark);
+}
+
+.leader .pin {
+  background: var(--paper);
+}
+
+.leader-a { top: 25%; left: -49px; }
+.leader-b { top: 50%; left: -49px; }
+.leader-c { top: 73%; left: -49px; }
+
+.leader.reverse {
+  grid-template-columns: minmax(44px, 8vw) 20px;
+}
+
+.leader.reverse::after { grid-column: 1; grid-row: 1; }
+.leader.reverse .pin { grid-column: 2; grid-row: 1; }
+
+.leader-right { top: 64%; right: -49px; }
+
+.case-plate:nth-of-type(2) .leader-a { top: 24%; }
+.case-plate:nth-of-type(2) .leader-b { top: 49%; }
+.case-plate:nth-of-type(2) .leader-c { top: 72%; }
+
+.case-plate:nth-of-type(3) .leader-a { top: 27%; }
+.case-plate:nth-of-type(3) .leader-c { top: 54%; }
+
+.lede-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  border-top: 1px solid var(--rule-dark);
+  margin: 28px 0 0;
+  padding: 18px 12px 0;
+  color: var(--muted);
+}
+
+.lede-grid b {
+  display: block;
+  color: var(--ink);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 920px) {
+  .sheet { width: min(100% - 24px, 720px); margin-top: 16px; }
+  .masthead { align-items: flex-start; flex-direction: column; }
+  .masthead .right { white-space: normal; }
+  .case-plate { grid-template-columns: 1fr; gap: 10px; margin-bottom: 24px; }
+  .notes { min-height: auto; }
+  .summary { max-width: none; }
+  .callouts { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .visual { padding: 12px; }
+  .leader { display: none; }
+  .lede-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  body { font-size: 11px; }
+  .sheet { width: calc(100% - 18px); }
+  .notes { padding: 20px 16px; }
+  .callouts { grid-template-columns: 1fr; }
+  .plate-title { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<main class="sheet">
+  <header class="masthead">
+    <div>
+      <h1>SITA Aviation Systems <span class="sub">/ UX Portfolio Monograph</span></h1>
+    </div>
+    <div class="right">Product Design Archive / May 2026</div>
+  </header>
+
+  <section class="case-plate" id="service-coverage">
+    <aside class="notes">
+      <h2 class="plate-title">01 / Service Coverage</h2>
+      <div class="project">
+        <b>My Fleet</b>
+        Communication Sites
+      </div>
+      <p class="summary">Real-time view of communication site coverage and frequency availability.</p>
+      <div class="short-rule"></div>
+      <div class="callouts" aria-label="Service Coverage annotations">
+        <div class="callout"><span class="badge">A</span><span>Filter by site criticality, location, and frequency attributes.</span></div>
+        <div class="callout"><span class="badge">B</span><span>Coverage overlay shows available service footprint and site density.</span></div>
+        <div class="callout"><span class="badge">C</span><span>Site detail panel with frequency availability and coverage selection.</span></div>
+      </div>
+      <div class="plate-id">Plate 01<br>MF-CS-01</div>
+    </aside>
+
+    <div class="visual">
+      <div class="leader leader-a"><span class="pin">A</span></div>
+      <div class="leader leader-b reverse leader-right"><span class="pin">B</span></div>
+      <div class="leader leader-c"><span class="pin">C</span></div>
+      <div class="image-frame">
+        <img src="img/MYF-1.png" alt="My Fleet communication sites coverage map">
+      </div>
+    </div>
+  </section>
+
+  <section class="case-plate" id="occ-operations">
+    <aside class="notes">
+      <h2 class="plate-title">02 / OCC Operations</h2>
+      <div class="project">
+        <b>SITA Mission Control</b>
+        Operations Dashboard
+      </div>
+      <p class="summary">Operational command centre consolidating disruptions, live messages, and flight status across operations.</p>
+      <div class="short-rule"></div>
+      <div class="callouts" aria-label="OCC Operations annotations">
+        <div class="callout"><span class="badge">A</span><span>Disruption board with impact, status, and estimated times.</span></div>
+        <div class="callout"><span class="badge">B</span><span>Live operational messages and coordination channel.</span></div>
+        <div class="callout"><span class="badge">C</span><span>Flight list with timing, routing, and status at a glance.</span></div>
+      </div>
+      <div class="plate-id">Plate 02<br>MC-DSP-01</div>
+    </aside>
+
+    <div class="visual">
+      <div class="leader leader-a"><span class="pin">A</span></div>
+      <div class="leader leader-b"><span class="pin">B</span></div>
+      <div class="leader leader-c"><span class="pin">C</span></div>
+      <div class="image-frame">
+        <img src="img/MC-1.jpg" alt="Mission Control OCC dashboard">
+      </div>
+    </div>
+  </section>
+
+  <section class="case-plate" id="trajectory-optimisation">
+    <aside class="notes">
+      <h2 class="plate-title">03 / Trajectory Optimisation</h2>
+      <div class="project">
+        <b>OptiFlight</b>
+        Recommendations
+      </div>
+      <p class="summary">Trajectory optimisation with impact analysis on fuel and time. Interactive route editing with actionable options.</p>
+      <div class="short-rule"></div>
+      <div class="callouts" aria-label="Trajectory Optimisation annotations">
+        <div class="callout"><span class="badge">A</span><span>Optimisation summary with fuel/time impact.</span></div>
+        <div class="callout"><span class="badge">B</span><span>Editable route options and performance parameters.</span></div>
+        <div class="callout"><span class="badge">C</span><span>Alternative route card with savings and shortcut details.</span></div>
+      </div>
+      <div class="plate-id">Plate 03<br>OF-TRJ-01</div>
+    </aside>
+
+    <div class="visual">
+      <div class="leader leader-a"><span class="pin">A</span></div>
+      <div class="leader leader-c"><span class="pin">C</span></div>
+      <div class="leader leader-b reverse leader-right"><span class="pin">B</span></div>
+      <div class="image-frame">
+        <img src="img/Opti-1.png" alt="OptiFlight recommendations and route optimisation map">
+      </div>
+    </div>
+  </section>
+
+  <section class="lede-grid" aria-label="Portfolio summary">
+    <p><b>Practice</b>Long-term in-house product work: discovery, product definition, iteration, and research, with AI tooling treated as part of the craft.</p>
+    <p><b>Role</b>Product designer at SITA, working across aviation communications, operational workflows, and flight optimisation systems.</p>
+    <p><b>Contact</b><a href="#">hello@nikaslilis.com</a> · <a href="#">linkedin</a> · <a href="#">cv · pdf</a></p>
+  </section>
+</main>
+</body>
+</html>
